@@ -3,20 +3,29 @@ CFLAGS = -Wall -Wextra -std=c11 -Iinclude
 
 SERVER = dlock_server
 CLIENT = dlock_client
+CHECKER = dlock_checker
 
-all: $(SERVER) $(CLIENT)
+all: $(SERVER) $(CLIENT) $(CHECKER)
 
-$(SERVER):
+$(SERVER): src/server.c src/dlock.c include/dlock.h
 	$(CC) $(CFLAGS) src/server.c src/dlock.c -o $(SERVER)
 
-$(CLIENT):
+$(CLIENT): src/client.c src/dlock.c include/dlock.h
 	$(CC) $(CFLAGS) src/client.c src/dlock.c -o $(CLIENT)
 
-clean:
-	rm -f $(SERVER) $(CLIENT)
+$(CHECKER): src/checker.c
+	$(CC) $(CFLAGS) src/checker.c -o $(CHECKER)
 
-run-server:
+clean:
+	rm -f $(SERVER) $(CLIENT) $(CHECKER)
+
+run-server: $(SERVER)
 	./$(SERVER)
 
-run-client:
+run-client: $(CLIENT)
 	./$(CLIENT) 1
+
+check: $(CHECKER)
+	./$(CHECKER) logs/dlock.log
+
+.PHONY: all clean run-server run-client check
