@@ -29,3 +29,5 @@ check: $(CHECKER)
 	./$(CHECKER) logs/dlock.log
 
 .PHONY: all clean run-server run-client check
+dlock_retry: src/module5/dlock_retry.c src/dlock.c include/dlock.h
+	$(CC) $(CFLAGS) src/module5/dlock_retry.c src/dlock.c -o dlock_retry
